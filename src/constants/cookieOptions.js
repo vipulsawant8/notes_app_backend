@@ -3,7 +3,8 @@ const isProd = process.env.NODE_ENV === "production";
 const base = {
 	secure: isProd,
 	httpOnly: true,
-	sameSite: isProd ? "none" : "lax"
+	sameSite: isProd ? "none" : "lax",
+	path: "/"
 };
 
 const setCookieOptions = name => {
