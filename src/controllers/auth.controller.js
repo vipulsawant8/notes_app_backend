@@ -325,11 +325,11 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
 } );
 
 const changePassword = asyncHandler( async (req, res) => {
+	const user = req.user;
 	req.log.info(
 		{ userId: user._id },
 		"Password change attempt"
 	);
-	const user = req.user;
 
 	const { currentPassword, newPassword } = req.body;
 
