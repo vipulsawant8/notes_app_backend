@@ -70,7 +70,13 @@ const updateNote = asyncHandler( async (req, res) => {
 	);
 
 	const title = req.body.title?.trim();
-	const content = req.body.content?.trim();
+	const content = req.body.content?.trim() || "";
+
+	req.log.debug({
+		title, content
+		},
+		"Update note body"
+	);
 
 	const note = await Note.findOneAndUpdate({ authorID: user._id, _id: noteID }, { title, content }, { new: true }).lean();
 
