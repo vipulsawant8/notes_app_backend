@@ -1,8 +1,11 @@
 import { Router } from "express";
 
+import verifyLogin from "../middlewares/auth/verifyLogin.js";
+
+import sanitizeBody from "../middlewares/sanitize/sanitize.middleware.js";
+
 import { validate } from "../middlewares/validate/validate.middleware.js";
 import { createNoteLimiter, updateNoteLimiter, deleteNoteLimiter, pinUnpinNoteLimiter, burstLimiter } from "../middlewares/limiters/setLimiters.js";
-import verifyLogin from "../middlewares/auth/verifyLogin.js";
 
 import { paginationQuerySchema, addNoteSchema, updateNoteSchema, deleteNoteSchema, pinUnpinNoteSchema } from "../validations/note.schema.js";
 import { fetchNotes, newNote, updateNote, deleteNote, updatePin } from "../controllers/note.controller.js";
@@ -28,7 +31,7 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
-router.get('/', verifyLogin, burstLimiter, validate(paginationQuerySchema), fetchNotes);
+router.get('/', verifyLogin, sanitizeBody, burstLimiter, validate(paginationQuerySchema), fetchNotes);
 
 /**
  * @swagger
@@ -56,7 +59,7 @@ router.get('/', verifyLogin, burstLimiter, validate(paginationQuerySchema), fetc
  *       400:
  *         description: Validation error or duplicate title
  */
-router.post('/', verifyLogin, burstLimiter, createNoteLimiter, validate(addNoteSchema), newNote);
+router.post('/', verifyLogin, sanitizeBody, burstLimiter, createNoteLimiter, validate(addNoteSchema), newNote);
 
 /**
  * @swagger
@@ -88,7 +91,7 @@ router.post('/', verifyLogin, burstLimiter, createNoteLimiter, validate(addNoteS
  *       404:
  *         description: Note not found
  */
-router.patch('/:id', verifyLogin, burstLimiter, updateNoteLimiter, validate(updateNoteSchema), updateNote);
+router.patch('/:id', verifyLogin, sanitizeBody, burstLimiter, updateNoteLimiter, validate(updateNoteSchema), updateNote);
 
 /**
  * @swagger
@@ -109,7 +112,7 @@ router.patch('/:id', verifyLogin, burstLimiter, updateNoteLimiter, validate(upda
  *       404:
  *         description: Note not found
  */
-router.delete('/:id', verifyLogin, burstLimiter, deleteNoteLimiter, validate(deleteNoteSchema), deleteNote);
+router.delete('/:id', verifyLogin, sanitizeBody, burstLimiter, deleteNoteLimiter, validate(deleteNoteSchema), deleteNote);
 
 /**
  * @swagger
@@ -141,6 +144,6 @@ router.delete('/:id', verifyLogin, burstLimiter, deleteNoteLimiter, validate(del
  *       400:
  *         description: Pin limit exceeded
  */
-router.patch('/:id/update-pin', verifyLogin, burstLimiter, pinUnpinNoteLimiter, validate(pinUnpinNoteSchema), updatePin);
+router.patch('/:id/update-pin', verifyLogin, sanitizeBody, burstLimiter, pinUnpinNoteLimiter, validate(pinUnpinNoteSchema), updatePin);
 
 export default router;

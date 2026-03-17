@@ -9,8 +9,6 @@ also be pinned or unpinned for quick access.
 
 Each user only has access to their own notes.
 
-
-
 # Features
 
 Main features included in the API:
@@ -25,8 +23,6 @@ Main features included in the API:
 -   Fetch notes with pagination
 -   Pin and unpin notes
 -   User specific notes (data isolation)
-
-
 
 # Tech Stack
 
@@ -44,8 +40,6 @@ The backend uses the following technologies:
 -   Swagger API documentation
 -   Jest + Supertest for testing
 
-
-
 # API Base URL
 
 /api/v1
@@ -54,16 +48,12 @@ Example:
 
 http://localhost:5000/api/v1
 
-
-
 # Authentication
 
 The API uses JWT authentication.
 
 After login, a token is returned which must be sent with protected
 requests.
-
-
 
 # Auth Endpoints
 
@@ -79,7 +69,6 @@ Verify email
 ```
 GET /api/v1/auth/verify-email
 ```
-
 
 # Notes Endpoints
 
@@ -104,7 +93,6 @@ Delete a note
 DELETE /api/v1/notes/:id
 ```
 
-
 # Pin / Unpin Notes
 
 Update Pin a note
@@ -112,8 +100,6 @@ Update Pin a note
 PATCH /api/v1/notes/:id/update-pin
 ```
 Pinned notes can be used to highlight important notes.
-
-
 
 # Pagination
 
@@ -131,12 +117,9 @@ Example response:
 
 Pagination is implemented using mongoose-paginate-v2.
 
-
-
 # Environment Variables
 
 Create a `.env` file in the project root & copy variables from .env, .env.example with your values.
-
 
 # Running the Project
 
@@ -157,7 +140,6 @@ Start production server
 npm start
 ```
 
-
 # API Documentation
 
 Swagger documentation is available for testing endpoints.
@@ -166,7 +148,6 @@ Open in browser:
 ```
 /api-docs
 ```
-
 
 # Notes
 
@@ -178,8 +159,6 @@ This project was built to practice:
 -   Pagination
 -   API security
 -   Backend testing
-
-
 
 # License
 

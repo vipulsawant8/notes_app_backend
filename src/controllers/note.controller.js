@@ -1,11 +1,10 @@
-import asyncHandler from 'express-async-handler';
 // import logger from "../utils/logger.js";
 
 import Note from '../models/notes.model.js';
 import ApiError from '../utils/ApiError.js';
 import ERRORS from '../constants/errors.js';
 
-const fetchNotes = asyncHandler( async (req, res) => {
+const fetchNotes = async (req, res) => {
 
 	const user = req.user;
 
@@ -35,9 +34,9 @@ const fetchNotes = asyncHandler( async (req, res) => {
 		data: result,
 		success: true
 	})
-} );
+};
 
-const newNote = asyncHandler( async (req, res) => {
+const newNote = async (req, res) => {
 
 	const user = req.user;
 
@@ -58,9 +57,9 @@ const newNote = asyncHandler( async (req, res) => {
 	);
 	const response = { statusCode: 201, message:`"${note.title}" was created`, data: note };
 	return res.status(response.statusCode).json(response);
-});
+};
 
-const updateNote = asyncHandler( async (req, res) => {
+const updateNote = async (req, res) => {
 
 	const user = req.user;
 	const noteID = req.params.id;
@@ -93,9 +92,9 @@ const updateNote = asyncHandler( async (req, res) => {
 	);
 	const response = { statusCode: 200, message: `"${note.title}" was updated`, data: note };
 	return res.status(response.statusCode).json(response);
-});
+};
 
-const deleteNote = asyncHandler( async (req, res) => {
+const deleteNote = async (req, res) => {
 
 	const user = req.user;
 	const noteID = req.params.id;
@@ -120,9 +119,9 @@ const deleteNote = asyncHandler( async (req, res) => {
 	const response = { statusCode: 200, message: `"${note.title}" was deleted`, data: note }
 
 	return res.status(response.statusCode).json(response);
-} );
+};
 
-const updatePin = asyncHandler( async (req, res) => {
+const updatePin = async (req, res) => {
 
 	const user = req.user;
 	const noteID = req.params.id;
@@ -149,6 +148,6 @@ const updatePin = asyncHandler( async (req, res) => {
 
 	const response = { statusCode: 200, message: `"${note.title}" was ${ pin ? "Pinned" : "Unpinned"}`, data: note };
 	return res.status(response.statusCode).json(response);
-});
+};
 
 export { fetchNotes, newNote, updateNote, deleteNote, updatePin };
