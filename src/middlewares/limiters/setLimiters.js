@@ -111,7 +111,9 @@ export const deleteNoteLimiter = createLimiter(
 export const pinUnpinNoteLimiter = createLimiter(
 	60 * 60 * 1000,
 	10,
-	"Max 10 times to pin/unpin a Note per hour"
+	"Max 10 times to pin/unpin a Note per hour",
+	"user",
+	true
 );
 
 // Anti-spam
