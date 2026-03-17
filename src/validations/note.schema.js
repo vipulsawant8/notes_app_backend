@@ -17,7 +17,8 @@ export const paginationQuerySchema = z.object({
 
 export const addNoteSchema = z.object({
     body:{
-        title: z.string().trim().min(1, ERRORS.NOTE_DATA_REQUIRED)
+        title: z.string().trim().min(1, ERRORS.NOTE_DATA_REQUIRED),
+        content: z.string().trim()
     }
 });
 
@@ -30,7 +31,9 @@ export const updateNoteSchema = {
       .string()
       .trim()
       .min(1, { message: ERRORS.NOTE_DATA_REQUIRED }),
-  }),
+    content: z.string().trim()
+  }
+)
 };
 
 export const deleteNoteSchema = {

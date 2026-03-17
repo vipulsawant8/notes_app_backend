@@ -1,9 +1,6 @@
-import asyncHandler from "express-async-handler";
 import User from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import logger from "../utils/logger.js";
-
-import ERRORS from "../constants/errors.js";
 
 import { setCookieOptions, clearCookieOptions } from "../constants/cookieOptions.js";
 
@@ -71,20 +68,18 @@ const clearAndRespond = function (res) {
     .json({ message: "Logged out successfully.", success: true });
 };
 
-const createAccount = asyncHandler(async (req, res) => {
+const createAccount = async (req, res) => {
 
 	const { email, name, password } = req.body;
 
 	req.log.info({ email }, "Account creation attempt");
-	if (!email || !name || !password)
-		throw new ApiError(400, ERRORS.MISSING_FIELDS);
 
 	let existingUser = await User.findOne({ email });
 
 	// Case 1: User already verified
 	if (existingUser && existingUser.isVerified) {
-		req.log.warn({ email }, "Account creation failed: already verified");
-		throw new ApiError(400, "Account already exists. Please login.");
+		req.log.warn({ email }, "Account creation failed");
+		throw new ApiError(400, "Account creation failed");
 	}
 
 	// Generate verification token
@@ -119,7 +114,6 @@ const createAccount = asyncHandler(async (req, res) => {
 
 	const verificationLink =
 		`${process.env.CLIENT_URL}/verify-email?token=${rawToken}`;
-
 	await sendEmail({
 		to: email,
 		subject: "Verify Your Email",
@@ -130,9 +124,9 @@ const createAccount = asyncHandler(async (req, res) => {
 		success: true,
 		message: "Please verify your email to activate your account."
 	});
-});
+};
 
-const verifyEmail = asyncHandler(async (req, res) => {
+const verifyEmail = async (req, res) => {
 	req.log.info("Email verification attempt");
 
 	const token = req.query.token || req.body.token;
@@ -172,9 +166,9 @@ const verifyEmail = asyncHandler(async (req, res) => {
 		success: true,
 		message: "Email verified successfully."
 	});
-});
+};
 
-const loginUser = asyncHandler( async (req, res) => {
+const loginUser =  async (req, res) => {
 
 	const identity = req.body.identity;
 	const password = req.body.password;
@@ -215,9 +209,9 @@ const loginUser = asyncHandler( async (req, res) => {
 	.cookie('accessToken', accessToken, setCookieOptions('accessToken'))
 	.cookie('refreshToken', refreshToken, setCookieOptions('refreshToken'))
 	.json(response);
-} );
+};
 
-const logoutUser = asyncHandler( async (req, res) => {
+const logoutUser =  async (req, res) => {
 	req.log.info({ ip: req.ip }, "Logout attempt");
 
 	const incomingToken = req.cookies.refreshToken;
@@ -264,17 +258,17 @@ const logoutUser = asyncHandler( async (req, res) => {
 	"User logged out successfully"
 	);
 	return clearAndRespond(res);
-} );
+};
 
-const getMe = asyncHandler( async (req, res) => {
+const getMe =  async (req, res) => {
 
 	const user = req.user;
 
 	const response = { message: "Profile loaded successfully.", data: user };
 	return res.status(200).json(response);
-} );
+};
 
-const refreshAccessToken = asyncHandler( async (req, res) => {
+const refreshAccessToken =  async (req, res) => {
 	req.log.info({ ip: req.ip }, "Refresh token attempt");
 	const incomingToken = req.cookies.refreshToken;
 	if (!incomingToken) {
@@ -322,9 +316,9 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
 			success: true,
 			message: "Session extended successfully"
 		});
-} );
+};
 
-const changePassword = asyncHandler( async (req, res) => {
+const changePassword =  async (req, res) => {
 	const user = req.user;
 	req.log.info(
 		{ userId: user._id },
@@ -363,9 +357,9 @@ const changePassword = asyncHandler( async (req, res) => {
 	.cookie('accessToken', accessToken, setCookieOptions('accessToken'))
 	.cookie('refreshToken', refreshToken, setCookieOptions('refreshToken'))
 	.json(response);
-} );
+};
 
-const forgotPassword = asyncHandler( async (req, res) => {
+const forgotPassword =  async (req, res) => {
 	const { email } = req.body;
 	req.log.info({ email }, "Password reset request received");
 	
@@ -394,9 +388,9 @@ const forgotPassword = asyncHandler( async (req, res) => {
 	req.log.info({ email }, "Password reset email sent");
 	const response = { success:true, message: "If an account with that email exists, a reset link has been sent." };
 	return res.json(response);
-} );
+};
 
-const resetPassword = asyncHandler( async (req, res) => {
+const resetPassword =  async (req, res) => {
 	req.log.info("Password reset attempt");
 
 	const token = req.body.token || req.query.token;
@@ -428,6 +422,6 @@ const resetPassword = asyncHandler( async (req, res) => {
 	const response = { message: "Password was Reset", success: true };
 	return res.status(200)
 	.json(response);
-} );
+};
 
 export { createAccount, verifyEmail, loginUser, logoutUser, getMe, refreshAccessToken, changePassword, forgotPassword, resetPassword };

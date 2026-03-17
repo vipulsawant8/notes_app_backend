@@ -1,10 +1,16 @@
 import { Router } from "express";
 
-import { createdUserLimiter, verifyEmailLimiter, loginLimiter, changePasswordLimiter, forgotPasswordLimiter, refreshTokenLimiter, resetPasswordLimiter  } from "../middlewares/limiters/setLimiters.js";
-import { validate } from "../middlewares/validate/validate.middleware.js";
-import { createAccountSchema, verifyEmailSchema, loginUserSchema, changePasswordSchema, forgotPasswordSchema, resetPasswordSchema } from "../validations/auth.schema.js";
-import { getMe, loginUser, logoutUser, createAccount, verifyEmail, refreshAccessToken, changePassword, forgotPassword, resetPassword } from "../controllers/auth.controller.js";
 import verifyLogin from "../middlewares/auth/verifyLogin.js";
+
+import sanitizeBody from "../middlewares/sanitize/sanitize.middleware.js";
+
+import { createdUserLimiter, verifyEmailLimiter, loginLimiter, changePasswordLimiter, forgotPasswordLimiter, refreshTokenLimiter, resetPasswordLimiter  } from "../middlewares/limiters/setLimiters.js";
+
+import { validate } from "../middlewares/validate/validate.middleware.js";
+
+import { createAccountSchema, verifyEmailSchema, loginUserSchema, changePasswordSchema, forgotPasswordSchema, resetPasswordSchema } from "../validations/auth.schema.js";
+
+import { getMe, loginUser, logoutUser, createAccount, verifyEmail, refreshAccessToken, changePassword, forgotPassword, resetPassword } from "../controllers/auth.controller.js";
 
 const router = Router();
 
@@ -37,7 +43,7 @@ const router = Router();
  *       400:
  *         description: Validation error or account exists
  */
-router.post('/create-account', createdUserLimiter, validate(createAccountSchema), createAccount);
+router.post('/create-account', sanitizeBody, createdUserLimiter, validate(createAccountSchema), createAccount);
 
 /**
  * @swagger
@@ -62,7 +68,7 @@ router.post('/create-account', createdUserLimiter, validate(createAccountSchema)
  *       400:
  *         description: Invalid or expired token
  */
-router.post('/verify-email', verifyEmailLimiter, validate(verifyEmailSchema), verifyEmail);
+router.post('/verify-email', sanitizeBody, verifyEmailLimiter, validate(verifyEmailSchema), verifyEmail);
 
 /**
  * @swagger
@@ -93,7 +99,7 @@ router.post('/verify-email', verifyEmailLimiter, validate(verifyEmailSchema), ve
  *       401:
  *         description: Invalid credentials
  */
-router.post('/login', loginLimiter, validate(loginUserSchema), loginUser);
+router.post('/login', sanitizeBody, loginLimiter, validate(loginUserSchema), loginUser);
 
 /**
  * @swagger
@@ -105,7 +111,7 @@ router.post('/login', loginLimiter, validate(loginUserSchema), loginUser);
  *       200:
  *         description: Logged out successfully
  */
-router.post('/logout', logoutUser);
+router.post('/logout', sanitizeBody, logoutUser);
 
 /**
  * @swagger
@@ -119,7 +125,7 @@ router.post('/logout', logoutUser);
  *       401:
  *         description: Unauthorized
  */
-router.get('/me', verifyLogin, getMe);
+router.get('/me', verifyLogin, sanitizeBody, getMe);
 
 /**
  * @swagger
@@ -133,7 +139,7 @@ router.get('/me', verifyLogin, getMe);
  *       401:
  *         description: Unauthorized
  */
-router.post('/refresh-token', refreshTokenLimiter,  refreshAccessToken);
+router.post('/refresh-token', sanitizeBody, refreshTokenLimiter,  refreshAccessToken);
 
 /**
  * @swagger
@@ -161,7 +167,7 @@ router.post('/refresh-token', refreshTokenLimiter,  refreshAccessToken);
  *       400:
  *         description: Invalid password
  */
-router.post('/change-password', verifyLogin, changePasswordLimiter, validate(changePasswordSchema), changePassword);
+router.post('/change-password', verifyLogin, sanitizeBody, changePasswordLimiter, validate(changePasswordSchema), changePassword);
 
 /**
  * @swagger
@@ -184,7 +190,7 @@ router.post('/change-password', verifyLogin, changePasswordLimiter, validate(cha
  *       200:
  *         description: Reset email sent if account exists
  */
-router.post('/forgot-password', forgotPasswordLimiter, validate(forgotPasswordSchema), forgotPassword);
+router.post('/forgot-password', sanitizeBody, forgotPasswordLimiter, validate(forgotPasswordSchema), forgotPassword);
 
 /**
  * @swagger
@@ -212,6 +218,6 @@ router.post('/forgot-password', forgotPasswordLimiter, validate(forgotPasswordSc
  *       400:
  *         description: Invalid or expired token
  */
-router.post('/reset-password', resetPasswordLimiter, validate(resetPasswordSchema), resetPassword);
+router.post('/reset-password', sanitizeBody, resetPasswordLimiter, validate(resetPasswordSchema), resetPassword);
 
 export default router;
