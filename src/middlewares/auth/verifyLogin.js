@@ -1,0 +1,33 @@
+import jwt from "jsonwebtoken";
+import ApiError from "../../utils/ApiError.js";
+import User from "../../models/user.model.js";
+// import logger from "../../utils/logger.js";
+
+const verifyLogin = async (req, res, next) => {
+	
+	const accessToken = req.cookies?.accessToken;
+
+	if (!accessToken) throw new ApiError(401, "Unauthorized");
+
+	let decodedToken;
+	try {
+		
+		decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+	} catch (error) {
+		
+		throw new ApiError(401, "Unauthorized")
+	}
+
+	if (!decodedToken.id) throw new ApiError(401, "Unauthorized");
+
+	req.log.debug({ decodedToken }, "User :");
+	const user = await User.findById(decodedToken.id);
+
+	if (!user) throw new ApiError(401, "Unauthorized");
+
+	req.user = user;
+	req.user.deviceId = decodedToken.deviceId;
+	next();
+};
+
+export default verifyLogin;
