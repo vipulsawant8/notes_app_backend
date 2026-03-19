@@ -1,3 +1,4 @@
+import logger from "../../utils/logger.js";
 import { sanitizeInput } from "../../utils/sanitize.js";
 
 const sanitizeBody = (req, res, next) => {
@@ -14,6 +15,8 @@ const sanitizeBody = (req, res, next) => {
 	if (req.body) sanitizeObject(req.body);
 	if (req.query) sanitizeObject(req.query);
 	if (req.params) sanitizeObject(req.params);
+
+	req.log.debug("SanitizeBody called");
 
 	next();
 };
