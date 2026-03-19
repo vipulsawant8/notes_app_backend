@@ -16,7 +16,7 @@ import swaggerSpec from './config/swagger.js';
 const app = e();
 
 app.disable('x-powered-by');
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
 
 const allowedOrigins = process.env.CORS_ORIGIN.split(',');
 logger.debug({ allowedOrigins }, "CORS configuration loaded");
