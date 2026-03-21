@@ -32,7 +32,7 @@ const shutdown = async (signal) => {
 
 	try {
 		// Stop accepting new connections
-		server.close(() => {
+		app.close(() => {
 			logger.info("HTTP server closed");
 		});
 
